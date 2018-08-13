@@ -1,16 +1,15 @@
-var through = require ('through2')
-var mjmlDefaultEngine = require ('mjml')
-var gutil = require ('gulp-util')
-
-var GulpError = gutil.PluginError
+var through = require ('through2');
+var mjmlDefaultEngine = require ('mjml');
+var PluginError = require ('plugin-error');
+var replaceExtension = require('replace-ext');
 var NAME = 'MJML'
 
 function error (file) {
   return function (message) {
-    return new GulpError(
-      NAME,
-      'Error in file ' + file + ': ' + message
-    )
+    return new PluginError({
+        plugin: NAME,
+        message: 'Error in file ' + file + ': ' + message
+    })
   }
 }
 
@@ -50,7 +49,7 @@ module.exports = function mjml (mjmlEngine, options) {
       }
 
       output.contents = new Buffer(render.html)
-      output.path = gutil.replaceExtension(file.path.toString(), '.html')
+      output.path = replaceExtension(file.path.toString(), '.html')
       this.push(output)
     }
     return callback()
